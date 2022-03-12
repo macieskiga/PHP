@@ -1,0 +1,67 @@
+<?php
+echo  nl2br("Escolha a conversão que você deseja: 0 = Comprimento, 1 = Massa, 2 = Temperatura.  \n " );
+$a = (int)readline('');
+switch ($a) {
+    case 0:
+        echo nl2br("escolha o tipo de unidade: 3 = converter de km para metro, 4 = metro para cm, 5 = km para cm  \n");
+  $b = (int)readline('');
+      Switch($b){
+        case 3:
+         echo nl2br("Digite o valor de KM para metros \n");
+      $calculo = (int)readline('');
+      $KmpM = $calculo * 1000;
+        echo  nl2br("  A conversão é: $KmpM metros");
+          break;
+        
+        case 4:
+          echo nl2br("Digite o valor de Metros para Cm \n");
+       $calculo2 = (int)readline('');
+       $MpCm = $calculo2 * 100;
+         echo  nl2br("  A conversão é: $MpCm cm");
+         break;
+        
+        case 5:
+        echo nl2br("Digite o valor de Km para Cm \n");
+       $calculo3 = (int)readline('');
+       $KmpCm = $calculo3 * 100000;
+         echo nl2br("  A conversão é: $KMpCm cm");    
+        break;}
+    break;
+    case 1:
+        echo nl2br("escolha o tipo de unidade: 6 = Quilogramas para gramas, 7 = gramas para quilogramas \n");
+  $c = (int)readline(''); 
+      Switch($c){
+        case 6:
+        echo nl2br("Qual o valor que deseja converter? \n");
+         $calculo4 = (int)readline('');
+         $massa = $calculo4 * 1000;
+           echo nl2br("  A conversão é de : $massa gramas");
+        break;
+        
+        case 7:
+        echo nl2br("Qual o valor que deseja converter? \n");
+         $calculo5 = (int)readline('');
+         $massa = $calculo5 / 1000;
+           echo nl2br("  A conversão é de : $massa quilogramas");
+        break;}
+    break;
+    case 2:
+        echo nl2br("escolha o tipo de unidade: 8 = Fahrenheit para Celsius, 9 = Celsius para Fahrenheit \n");
+  $d = (int)readline(''); 
+       Switch($d){
+         case 8:
+         echo nl2br("Qual a temperatura em Fahrenheit que deseja converter? \n");
+         $calculo6 = (int)readline('');
+         $Cel = ($calculo6 - 32)/1.8 ; 
+           echo nl2br("  A conversão é de : $Cel Celsius");
+         break;
+         
+         case 9:
+         echo nl2br("Qual a temperatura em Fahrenheit que deseja converter? \n");
+         $calculo7 = (int)readline('');
+         $Fah = ($calculo7 * 1.8) + 32; 
+           echo nl2br("  A conversão é de : $Fah Fahrenheit");
+         break;}
+        
+}
+?>
