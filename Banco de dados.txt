@@ -1,0 +1,632 @@
+Nome: Gabriel Macieski Cortes RA 8056919
+
+
+
+
+
+
+
+
+Inserir dados em Acervo:
+ 
+<?php
+$mysql = new mysqli('localhost', 'root', 'x');
+
+
+mysqli_select_db($mysql, "livraria");
+
+$insert_acervo = mysqli_query($mysql, "INSERT INTO acervo(id, idEditora, titulo, autor, ano, preco, quantidade, tipo) VALUES (1, 1, 'The Fall of Constantinople 1453', 'Steven Runciman', 1957, 33.90, 5, 2)");
+
+
+
+
+
+
+
+IF ($insert_acervo != 0)    {
+echo "<BR><BR><CENTER><B><FONT FACE=Calibri COLOR=Green size=4>Dados
+     inseridos com sucesso!</CENTER></B></FONT>";
+     }
+ELSE{
+    "<BR><BR><CENTER><B><FONT FACE=Calibri COLOR=Red size=4>ERRO: Dados não inseridos!</CENTER></B></FONT>";
+}
+
+ ?>
+
+Atualização da Tabela: Acervo
+ 
+
+<?php
+$mysql = new mysqli('localhost', 'root', 'x');
+mysqli_select_db($mysql, "livraria");
+
+$update_acervo = mysqli_query($mysql, "UPDATE acervo
+SET id = 3, idEditora = 3, titulo = 'The Rise and Fall of the Roman Empire', ano = 1776, preco = 148.50,
+    quantidade = 1, tipo = 1
+WHERE id = 5");
+
+
+
+
+
+
+
+IF ($update_acervo != 0)    {
+echo "<BR><BR><CENTER><B><FONT FACE=Calibri COLOR=Orange size=4>Dados
+     Atualizados com sucesso!</CENTER></B></FONT>";
+     }
+ELSE{
+    "<BR><BR><CENTER><B><FONT FACE=Calibri COLOR=Red size=4>ERRO: Dados não inseridos!</CENTER></B></FONT>";
+}
+
+ ?>
+
+
+Pesquisa por Título: 
+ 
+Html:
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+    </head>
+<body>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="https://sourceodester.com"></a>
+        </div>
+    </nav>
+    <div class="col-md-3"></div>
+    <div class="col-md-6 well">
+        <h3 class="text-primary">Pesquise por Título no Acervo</h3>
+        <hr style="border-top:1px dotted #ccc;"/>
+        <div class="col-md-4">
+            <form method="POST" action="add.php">
+                <div class="form-group">
+                    <label></label>
+                    <input type="text" name="titulo" class="form-control" required="required"/>
+                </div>  
+                
+                </div>
+                
+            </form>
+        </div>
+        <div class="col-md-8">
+            <form method="POST" action="">
+                <div class="form-inline">
+                    <input type="text" class="form-control" name="keyword" placeholder="Pesquise Aqui..." required="required"/>
+                    <button class="btn btn-success" name="search">Pesquisar</button>
+                </div>
+            </form>
+            <br />
+        <?php include 'livrariaquery3.php'?>        
+        </div>
+</body> 
+</html>
+
+Query configuração1:
+<?php
+$servername = "localhost";
+$username = "root";
+$password = "x";
+$dbname = "livraria";
+
+$conn = new mysqli($servername, $username, $password, $dbname); 
+    if(ISSET($_POST['busca'])){
+?>
+    <table class="table table-striped">
+        <thead class="alert-info">
+            <tr>
+                <th>Livro</th>
+                <th>Autor</th>
+                <th>Ano</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+                $keyword = $_POST['Palavra Chave'];
+                $query = mysqli_query($conn, "SELECT * FROM `acervo` WHERE `titulo` LIKE '%$keyword%' or `autor` LIKE '%$keyword%'") or die(mysqli_error());
+                $count = mysqli_num_rows($query);
+                if($count > 0){
+                    while($fetch = mysqli_fetch_array($query)){
+            ?>
+                    <tr>
+                        <td><?php echo $fetch['titulo']?></td>
+                        <td><?php echo $fetch['autor']?></td>
+                        <td><?php echo $fetch['ano']?></td>
+                    </tr>
+            <?php
+                    }
+                }else{
+                    echo "<tr><td colspan='3' class='text-danger'><center>Sem Resultados!</center></td></tr>";
+                }
+            ?>
+        </tbody>
+    </table>
+<?php       
+    }else{
+?>
+    <table class="table table-striped">
+        <thead class="alert-info">
+            <tr>
+                <th>Livro</th>
+                <th>Autor</th>
+                <th>Ano</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+                $query = mysqli_query($conn, "SELECT * FROM `acervo` ORDER BY `titulo` ASC") or die(mysqli_error());
+                while($fetch = mysqli_fetch_array($query)){
+            ?>
+            <tr>
+                <td><?php echo $fetch['titulo']?></td>
+                <td><?php echo $fetch['autor']?></td>
+                <td><?php echo $fetch['ano']?></td>
+            </tr>
+            <?php
+                }
+            ?>
+        </tbody>
+    </table>
+<?php
+    }
+?>
+
+
+Query configuração2:
+<?php
+$servername = "localhost";
+$username = "root";
+$password = "x";
+$dbname = "livraria";
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+    if(ISSET($_POST['search'])){
+?>
+    <table class="table table-striped">
+        <thead class="alert-info">
+            <tr>
+                <th>Livro</th>
+                <th>Autor</th>
+                <th>Ano</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+                $keyword = $_POST['keyword'];
+                $query = mysqli_query($conn, "SELECT * FROM `acervo` WHERE `titulo` LIKE '%$keyword%' or `autor` LIKE '%$keyword%'") or die(mysqli_error());
+                $count = mysqli_num_rows($query);
+                if($count > 0){
+                    while($fetch = mysqli_fetch_array($query)){
+            ?>
+                    <tr>
+                        <td><?php echo $fetch['titulo']?></td>
+                        <td><?php echo $fetch['autor']?></td>
+                        <td><?php echo $fetch['ano']?></td>
+                    </tr>
+            <?php
+                    }
+                }else{
+                    echo "<tr><td colspan='3' class='text-danger'><center>Sem Resultados!</center></td></tr>";
+                }
+            ?>
+        </tbody>
+    </table>
+<?php       
+    }else{
+?>
+    <table class="table table-striped">
+        <thead class="alert-info">
+            <tr>
+                <th>Livro</th>
+                <th>Autor</th>
+                <th>Ano</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+                $query = mysqli_query($conn, "SELECT * FROM `acervo` ORDER BY `titulo` ASC") or die(mysqli_error());
+                while($fetch = mysqli_fetch_array($query)){
+            ?>
+            <tr>
+                <td><?php echo $fetch['titulo']?></td>
+                <td><?php echo $fetch['autor']?></td>
+                <td><?php echo $fetch['ano']?></td>
+            </tr>
+            <?php
+                }
+            ?>
+        </tbody>
+    </table>
+<?php
+    }
+?>
+
+Listar tudo da tabela “Editora”:
+ 
+
+<?php
+$servername = "localhost";
+$username = "root";
+$password = "x";
+$dbname = "livraria";
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+$sql = "SELECT * FROM editora";
+$result = $conn->query($sql);
+
+if ($result->num_rows > 0) {
+    
+    while($row = $result->fetch_assoc()) {
+        echo "<BR><BR><CENTER><B><FONT FACE=Calibri COLOR=Purple size=4> id: ". $row["id"]. " - nome: ". $row["nome"]. "</CENTER></B></FONT>";
+    }
+} else {
+    echo "<BR><BR><CENTER><B><FONT FACE=Calibri COLOR=Red size=4>0 resultados. </CENTER></B></FONT>";
+}
+
+$conn->close();
+?>
+
+
+
+
+Todos os Códigos usados no projeto:
+
+<?php
+$mysql = new mysqli('localhost', 'root', 'x');
+
+$create = "CREATE DATABASE livraria";
+
+mysqli_select_db($mysql, "livraria");
+
+
+ ?>
+
+
+<?php
+
+class CreateTableDemo {
+
+    
+    const DB_HOST = 'localhost';
+
+    
+    const DB_NAME = 'livraria';
+
+    
+    const DB_USER = 'root';
+    
+    const DB_PASSWORD = 'x';
+
+    
+     
+      
+     
+    private $pdo = null;
+
+   
+    public function __construct() {
+        
+        $conStr = sprintf("mysql:host=%s;dbname=%s", self::DB_HOST, self::DB_NAME);
+        try {
+            $this->pdo = new PDO($conStr, self::DB_USER, self::DB_PASSWORD);
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+        }
+    }
+
+    
+    public function __destruct() {
+        
+        $this->pdo = null;
+    }
+
+    
+      
+     
+    public function createLivrariaTable() {
+        $sql1 = <<<EOSQL
+            CREATE TABLE IF NOT EXISTS acervo (
+                id    INT AUTO_INCREMENT PRIMARY KEY,
+                idEditora    INT,
+                titulo  VARCHAR (100) ,
+                autor VARCHAR(60),
+                ano   INT,
+                preco DOUBLE,
+                quantidade INT,                
+                tipo INT
+            );
+EOSQL;
+        return $this->pdo->exec($sql1);
+    }
+
+    public function createEditoraTable() {
+        $sql2 = <<<EOSQL
+            CREATE TABLE IF NOT EXISTS editora (
+               id    INT AUTO_INCREMENT PRIMARY KEY,
+               nome  VARCHAR (60)
+        );
+EOSQL;
+    return $this->pdo->exec($sql2);
+}
+}
+
+$obj = new CreateTableDemo();
+$obj->createLivrariaTable();
+
+$obj = new CreateTableDemo();
+$obj->createEditoraTable();
+
+IF (($sql1 = true) AND ($sql2 = true))
+
+ echo "<BR><BR>
+ <FONT color=Green face=Verdana size=4>
+ <CENTER>
+ Tabelas criadas com sucesso!
+ </CENTER>
+ </FONT>";
+ ELSE
+ echo "<BR><BR>
+ <FONT color=red face=Verdana size=4>
+ <CENTER>
+ ERRO: As tabelas não foram criadas!
+ </CENTER>
+ </FONT>";
+ ?>
+
+<?php
+$mysql = new mysqli('localhost', 'root', 'x');
+
+
+mysqli_select_db($mysql, "livraria");
+
+$insert_acervo = mysqli_query($mysql, "INSERT INTO acervo(id, idEditora, titulo, autor, ano, preco, quantidade, tipo) VALUES (5, 1, 'The Fall of Constantinople 1453', 'Steven Runciman', 1957, 33.90, 5, 2)");
+
+
+
+
+
+
+
+IF ($insert_acervo != 0)    {
+echo "<BR><BR><CENTER><B><FONT FACE=Calibri COLOR=Green size=4>Dados
+     inseridos com sucesso!</CENTER></B></FONT>";
+     }
+ELSE{
+    "<BR><BR><CENTER><B><FONT FACE=Calibri COLOR=Red size=4>ERRO: Dados não inseridos!</CENTER></B></FONT>";
+}
+
+ ?>
+
+
+<?php
+$mysql = new mysqli('localhost', 'root', 'x');
+
+
+mysqli_select_db($mysql, "livraria");
+
+$insert_editora = mysqli_query($mysql, "INSERT INTO editora(id, nome) VALUES (3, 'Digireads.com Publishing')");
+
+
+IF ($insert_editora != 0)    {
+echo "<BR><BR><CENTER><B><FONT FACE=Calibri COLOR=Green size=4>Dados
+     inseridos com sucesso!</CENTER></B></FONT>";
+     }
+
+ ?>
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+    </head>
+<body>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="https://sourceodester.com"></a>
+        </div>
+    </nav>
+    <div class="col-md-3"></div>
+    <div class="col-md-6 well">
+        <h3 class="text-primary">Pesquise por Título no Acervo</h3>
+        <hr style="border-top:1px dotted #ccc;"/>
+        <div class="col-md-4">
+            <form method="POST" action="add.php">
+                <div class="form-group">
+                    <label></label>
+                    <input type="text" name="titulo" class="form-control" required="required"/>
+                </div>  
+                
+                </div>
+                
+            </form>
+        </div>
+        <div class="col-md-8">
+            <form method="POST" action="">
+                <div class="form-inline">
+                    <input type="text" class="form-control" name="keyword" placeholder="Pesquise Aqui..." required="required"/>
+                    <button class="btn btn-success" name="search">Pesquisar</button>
+                </div>
+            </form>
+            <br />
+        <?php include 'livrariaquery3.php'?>        
+        </div>
+</body> 
+</html>
+
+<?php
+$servername = "localhost";
+$username = "root";
+$password = "ga050504";
+$dbname = "livraria";
+
+$conn = new mysqli($servername, $username, $password, $dbname); 
+    if(ISSET($_POST['busca'])){
+?>
+    <table class="table table-striped">
+        <thead class="alert-info">
+            <tr>
+                <th>Livro</th>
+                <th>Autor</th>
+                <th>Ano</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+                $keyword = $_POST['Palavra Chave'];
+                $query = mysqli_query($conn, "SELECT * FROM `acervo` WHERE `titulo` LIKE '%$keyword%' or `autor` LIKE '%$keyword%'") or die(mysqli_error());
+                $count = mysqli_num_rows($query);
+                if($count > 0){
+                    while($fetch = mysqli_fetch_array($query)){
+            ?>
+                    <tr>
+                        <td><?php echo $fetch['titulo']?></td>
+                        <td><?php echo $fetch['autor']?></td>
+                        <td><?php echo $fetch['ano']?></td>
+                    </tr>
+            <?php
+                    }
+                }else{
+                    echo "<tr><td colspan='3' class='text-danger'><center>Sem Resultados!</center></td></tr>";
+                }
+            ?>
+        </tbody>
+    </table>
+<?php       
+    }else{
+?>
+    <table class="table table-striped">
+        <thead class="alert-info">
+            <tr>
+                <th>Livro</th>
+                <th>Autor</th>
+                <th>Ano</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+                $query = mysqli_query($conn, "SELECT * FROM `acervo` ORDER BY `titulo` ASC") or die(mysqli_error());
+                while($fetch = mysqli_fetch_array($query)){
+            ?>
+            <tr>
+                <td><?php echo $fetch['titulo']?></td>
+                <td><?php echo $fetch['autor']?></td>
+                <td><?php echo $fetch['ano']?></td>
+            </tr>
+            <?php
+                }
+            ?>
+        </tbody>
+    </table>
+<?php
+    }
+?>
+
+<?php
+$servername = "localhost";
+$username = "root";
+$password = "x";
+$dbname = "livraria";
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+    if(ISSET($_POST['search'])){
+?>
+    <table class="table table-striped">
+        <thead class="alert-info">
+            <tr>
+                <th>Livro</th>
+                <th>Autor</th>
+                <th>Ano</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+                $keyword = $_POST['keyword'];
+                $query = mysqli_query($conn, "SELECT * FROM `acervo` WHERE `titulo` LIKE '%$keyword%' or `autor` LIKE '%$keyword%'") or die(mysqli_error());
+                $count = mysqli_num_rows($query);
+                if($count > 0){
+                    while($fetch = mysqli_fetch_array($query)){
+            ?>
+                    <tr>
+                        <td><?php echo $fetch['titulo']?></td>
+                        <td><?php echo $fetch['autor']?></td>
+                        <td><?php echo $fetch['ano']?></td>
+                    </tr>
+            <?php
+                    }
+                }else{
+                    echo "<tr><td colspan='3' class='text-danger'><center>Sem Resultados!</center></td></tr>";
+                }
+            ?>
+        </tbody>
+    </table>
+<?php       
+    }else{
+?>
+    <table class="table table-striped">
+        <thead class="alert-info">
+            <tr>
+                <th>Livro</th>
+                <th>Autor</th>
+                <th>Ano</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+                $query = mysqli_query($conn, "SELECT * FROM `acervo` ORDER BY `titulo` ASC") or die(mysqli_error());
+                while($fetch = mysqli_fetch_array($query)){
+            ?>
+            <tr>
+                <td><?php echo $fetch['titulo']?></td>
+                <td><?php echo $fetch['autor']?></td>
+                <td><?php echo $fetch['ano']?></td>
+            </tr>
+            <?php
+                }
+            ?>
+        </tbody>
+    </table>
+<?php
+    }
+?>
+
+<?php
+$servername = "localhost";
+$username = "root";
+$password = "ga050504";
+$dbname = "livraria";
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+$sql = "SELECT * FROM editora";
+$result = $conn->query($sql);
+
+if ($result->num_rows > 0) {
+    
+    while($row = $result->fetch_assoc()) {
+        echo "<BR><BR><CENTER><B><FONT FACE=Calibri COLOR=Purple size=4> id: ". $row["id"]. " - nome: ". $row["nome"]. "</CENTER></B></FONT>";
+    }
+} else {
+    echo "<BR><BR><CENTER><B><FONT FACE=Calibri COLOR=Red size=4>0 resultados. </CENTER></B></FONT>";
+}
+
+$conn->close();
+?>
+
+
+
+
